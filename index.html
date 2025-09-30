@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduKnowledge AI - Intelligent Policy Retrieval System | SIH 2025</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #7c3aed;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --border: #e5e7eb;
+            --india-orange: #FF9933;
+            --india-white: #FFFFFF;
+            --india-green: #138808;
+            --india-blue: #000080;
+            --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            --gradient-secondary: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 64, 175, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            animation: backgroundMove 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes backgroundMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -20px) scale(1.05); }
+        }
+
+        body[data-theme="light"] {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 50%, #fef3c7 100%);
+            color: #1f2937;
+        }
+
+        body[data-theme="light"]::before {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 64, 175, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, var(--india-orange), var(--india-white), var(--india-green)) 1;
+        }
+
+        body[data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 24px;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-emblem {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 24px;
+            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-emblem::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .logo-text h1 {
+            color: var(--dark);
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text .tagline {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .sih-badge {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .theme-toggle {
+            background: var(--light);
+            border: 2px solid var(--border);
+            color: var(--dark);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05) rotate(15deg);
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 6rem 0 5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 10px 24px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-badge i {
+            color: var(--accent);
+        }
+
+        .hero-section h2 {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+            text-shadow: 0 2px 40px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+
+        .hero-section .gradient-text {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.4rem;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .hero-section .description {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.85);
+            max-width: 900px;
+            margin: 0 auto 3.5rem;
+            line-height: 1.9;
+        }
+
+        /* Smart Search */
+        .search-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: stretch;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 25px 70px rgba(30, 64, 175, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .search-icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        }
+
+        .search-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 20px 24px;
+            font-size: 1.1rem;
+            background: white;
+            color: var(--dark);
+            min-width: 0;
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+        }
+
+        .voice-btn {
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.5);
+        }
+
+        .voice-btn.listening {
+            animation: pulse-voice 1.5s infinite;
+        }
+
+        @keyframes pulse-voice {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(245, 158, 11, 0); }
+        }
+
+        .search-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(30, 64, 175, 0.5);
+        }
+
+        /* Search Suggestions */
+        .search-suggestions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .suggestion-tag {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            color: white;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .suggestion-tag:hover {
+            background: rgba(255,255,255,0.95);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 2.5rem;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            border-color: var(--primary);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        body[data-theme="light"] .stat-card {
+            background: white;
+        }
+
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
+            flex-shrink: 0;
+        }
+
+        .stat-info h3 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 5px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-info p {
+            color: #6b7280;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* Dashboard Section */
+        .dashboard-section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-primary);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+        }
+
+        body[data-theme="light"] .dashboard-card {
+            background: white;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--light);
+        }
+
+        .card-header-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        .card-header h3 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        /* Features List */
+        .features-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03), rgba(124, 58, 237, 0.03));
+            border-radius: 16px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.08), rgba(124, 58, 237, 0.08));
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+        }
+
+        .feature-text h4 {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 1.1rem;
+        }
+
+        .feature-text p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(17, 24, 39, 0.98);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 5rem;
+            border-top: 3px solid transparent;
+            border-image: linear-gradient(90deg, var(--india-orange), var(--india-white), var(--india-green)) 1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .govt-emblem {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-brand p {
+            color: #9ca3af;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 8px;
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header .container {
+                flex-wrap: wrap;
+            }
+
+            .hero-section h2 {
+                font-size: 2.5rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+                border-radius: 20px;
+            }
+
+            .search-icon-wrapper {
+                padding: 16px 24px;
+            }
+
+            .search-actions {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .search-btn {
+                flex: 1;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sih-badge {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section h2 {
+                font-size: 2rem;
+            }
+
+            .hero-section .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-emblem">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>EduKnowledge AI</h1>
+                    <div class="tagline">Ministry of Education</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="sih-badge">
+                    <i class="fas fa-trophy"></i> SIH 2025
+                </div>
+                <button class="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-badge">
+                <i class="fas fa-award"></i>
+                Smart India Hackathon 2025
+            </div>
+            <h2>
+                Intelligent <span class="gradient-text">Policy Retrieval</span><br>
+                for Higher Education
+            </h2>
+            <p class="subtitle">AI-Powered Knowledge Management System</p>
+            <p class="description">
+                Revolutionizing how government officials access and analyze regulations, policies, schemes, and projects. 
+                Our advanced AI system enables instant, accurate retrieval from vast databases, eliminating manual searches 
+                and empowering data-driven decision making for the Department of Higher Education.
+            </p>
+
+            <!-- Smart Search -->
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="search-icon-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <input type="text" 
+                           class="search-input" 
+                           placeholder="Search for NEP 2020, scholarship schemes, research grants, accreditation norms..."
+                           aria-label="Search knowledge base">
+                    <div class="search-actions">
+                        <button class="voice-btn" aria-label="Voice search" title="Voice Search">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Suggestions -->
+                <div class="search-suggestions">
+                    <span class="suggestion-tag"><i class="fas fa-file-alt"></i> NEP 2020</span>
+                    <span class="suggestion-tag"><i class="fas fa-graduation-cap"></i> Scholarships</span>
+                    <span class="suggestion-tag"><i class="fas fa-flask"></i> Research Grants</span>
+                    <span class="suggestion-tag"><i class="fas fa-university"></i> Autonomy Rules</span>
+                    <span class="suggestion-tag"><i class="fas fa-laptop"></i> Digital Policy</span>
+                    <span class="suggestion-tag"><i class="fas fa-award"></i> Accreditation</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>50,000+</h3>
+                        <p>Policy Documents Indexed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>&lt;2s</h3>
+                        <p>Average Response Time</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>97.5%</h3>
+                        <p>Retrieval Accuracy</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>2,500+</h3>
+                        <p>Active Officials</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Comprehensive Solution Overview</h2>
+                <p>Transforming manual processes into intelligent, automated workflows</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Problem Statement -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-header-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>Current Challenges</h3>
+                    </div>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Time-Consuming Manual Search</h4>
+                                <p>Officials spend hours navigating multiple databases, reducing productivity and delaying critical decisions</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Expert-Dependent Process</h4>
+                                <p>Decision quality varies significantly based on individual expertise, creating inconsistencies</p>
+                            </div>
